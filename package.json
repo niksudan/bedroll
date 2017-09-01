@@ -1,4 +1,25 @@
 {
   "name": "basecamp-mini",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "main": "dist/main.js",
+  "dependencies": {
+    "menubar": "^5.2.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.0.5",
+    "@types/react-dom": "^15.5.4",
+    "awesome-typescript-loader": "^3.2.3",
+    "electron": "^1.7.5",
+    "electron-packager": "^9.0.0",
+    "electron-prebuilt": "^1.4.13",
+    "source-map-loader": "^0.2.1",
+    "typescript": "^2.5.2",
+    "webpack": "^3.5.5"
+  },
+  "scripts": {
+    "dev": "tsc && webpack && electron . --enable-logging",
+    "build": "tsc && webpack && electron-packager . BasecampMini"
+  }
 }
