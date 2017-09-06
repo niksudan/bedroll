@@ -4,8 +4,8 @@ import {
   THROW_ERROR,
   REQUEST_ACCESS_TOKEN, RECEIVE_ACCESS_TOKEN,
   REQUEST_AUTH, RECEIVE_AUTH,
-  RECEIVE_ACCOUNT,
-  REQUEST_TODOS, RECEIVE_TODOS,
+  SET_ACCOUNT,
+  REQUEST_TODOS, RECEIVE_TODOS, RESET_TODOS,
 } from './constants';
 
 /**
@@ -17,20 +17,16 @@ export const throwError = (data) => ({
   data,
 });
 
-export const requestAccessToken = () => ({
+const requestAccessToken = () => ({
   type: REQUEST_ACCESS_TOKEN,
 });
 
-export const receiveAccessToken = (data) => ({
+const receiveAccessToken = (data) => ({
   type: RECEIVE_ACCESS_TOKEN,
   data,
 });
 
-/**
- * Load Basecamp access token from storage
- * This is required for API calls
- */
-export const getAccessToken = () => (
+const getAccessToken = () => (
   async (dispatch) => {
     dispatch(requestAccessToken());
     const response = await axios.get(`token.json`);
@@ -40,42 +36,80 @@ export const getAccessToken = () => (
   }
 );
 
-export const requestAuth = () => ({
+const requestAuth = () => ({
   type: REQUEST_AUTH,
 });
 
-export const receiveAuth = (data) => ({
+const receiveAuth = (data) => ({
   type: RECEIVE_AUTH,
   data,
 });
 
-export const receiveAccount = (data) => ({
-  type: RECEIVE_ACCOUNT,
+const setAccount = (data) => ({
+  type: SET_ACCOUNT,
   data,
 });
 
 /**
- * Load Basecamp authentication details
- * This is required for API calls
+ * Fetch authentication details
+ * @return {int} accountID
  */
-export const getAuth = () => (
+export const authenticate = () => (
   async (dispatch) => {
+    await dispatch(getAccessToken());
     dispatch(requestAuth());
     const response = await axios.get('https://launchpad.37signals.com/authorization.json');
+    if (response.status !== 200) {
+      dispatch(throwError('Could not connect to authentication service'));
+      return;
+    }
     dispatch(receiveAuth(response.data));
 
+    // Once we have the authentication details, we must find a valid BC3 account to get data from
     if (response.data.accounts.length < 0) {
       dispatch(throwError('You\'re not a member of any account'));
       return;
     }
-
     const account = find(response.data.accounts, { product: 'bc3' });
     if (account === undefined) {
       dispatch(throwError('You need to be a member of a Basecamp 3 account'));
       return;
     }
+    dispatch(setAccount(account));
+    return account.id;
+  }
+);
 
-    dispatch(receiveAccount(account));
+const requestTodos = () => ({
+  type: REQUEST_TODOS,
+});
+
+const receiveTodos = (data, total) => ({
+  type: RECEIVE_TODOS,
+  data,
+  total: parseInt(total),
+});
+
+/**
+ * Fetch todos from Basecamp
+ * @param {Object} auth
+ */
+export const getTodos = (accountID, page = 1) => (
+  async (dispatch) => {
+    dispatch(requestTodos());
+    const response = await axios.get(`https://3.basecampapi.com/${accountID}/projects/recordings.json?type=Todo&page=${page}`);
+    if (response.status !== 200) {
+      dispatch(throwError('Could not connect to Basecamp'));
+      return;
+    }
+    dispatch(receiveTodos(response.data, response.headers['x-total-count']));
     return response;
   }
 );
+
+/**
+ * Reset the Basecamp todos
+ */
+export const resetTodos = () => ({
+  type: RESET_TODOS,
+});

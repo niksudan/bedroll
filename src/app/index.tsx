@@ -2,12 +2,12 @@ import * as React from 'react';
 import { render } from "react-dom";
 import { Provider } from 'react-redux';
 import store from './redux';
-import { getAccessToken, getAuth } from './redux/actions';
+import { authenticate, getTodos } from './redux/actions';
 import Wrapper from './components/Wrapper';
 
-store.dispatch(getAccessToken()).then(() => {
-  store.dispatch(getAuth());
-});
+store.dispatch(authenticate()).then((accountID) => {
+  store.dispatch(getTodos(accountID));
+})
 
 const app = document.getElementById('app');
 

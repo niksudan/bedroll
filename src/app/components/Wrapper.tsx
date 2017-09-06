@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Welcome from './Welcome';
+import Archive from './Archive';
 import Error from './Error';
+import Loading from './Loading';
 
 const Wrapper = ({ isLoading, didInvalidate, auth }) => {
   if (isLoading || auth.identity === undefined) {
-    return null;
+    return <Loading />;
   }
   if (didInvalidate) {
     return <Error />;
   }
-  return <Welcome />;
+  return <Archive />;
 }
 
 const mapStateToProps = state => ({

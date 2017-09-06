@@ -2,7 +2,8 @@ import {
   THROW_ERROR,
   REQUEST_ACCESS_TOKEN, RECEIVE_ACCESS_TOKEN,
   REQUEST_AUTH, RECEIVE_AUTH,
-  RECEIVE_ACCOUNT,
+  SET_ACCOUNT,
+  REQUEST_TODOS, RECEIVE_TODOS, RESET_TODOS,
 } from './constants';
 
 const initialState = {
@@ -13,6 +14,7 @@ const initialState = {
   auth: {},
   account: {},
   items: [],
+  total: 0,
 };
 
 export default (state = initialState, action) => {
@@ -25,6 +27,7 @@ export default (state = initialState, action) => {
       });
     case REQUEST_ACCESS_TOKEN:
     case REQUEST_AUTH:
+    case REQUEST_TODOS:
       return Object.assign({}, state, {
         isLoading: true,
       });
@@ -38,10 +41,19 @@ export default (state = initialState, action) => {
         isLoading: false,
         auth: action.data,
       });
-    case RECEIVE_ACCOUNT:
+    case SET_ACCOUNT:
+      return Object.assign({}, state, {
+        account: action.data,
+      });
+    case RESET_TODOS:
+      return Object.assign({}, state, {
+        items: [],
+      });
+    case RECEIVE_TODOS:
       return Object.assign({}, state, {
         isLoading: false,
-        account: action.data,
+        items: action.data,
+        total: action.total,
       });
     default:
       return state;
