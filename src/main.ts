@@ -13,7 +13,12 @@ const basecampOAuth2 = new BasecampOAuth2({
   redirectUri: 'https://www.digital-results.com',
 });
 
-const mb = menubar({ preloadWindow: true });
+const mb = menubar({
+  preloadWindow: true,
+  height: 600,
+  alwaysOnTop: true,
+});
+
 let accessToken;
 
 mb.on('after-create-window', async () => {
