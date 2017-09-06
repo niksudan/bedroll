@@ -10,10 +10,12 @@ const Item = ({ item }) => (
     </div>
     <div style={{paddingBottom: '1rem', paddingLeft: '0.5rem'}}>
       <p className="heading" style={{ marginBottom: 0 }}>
-        {item.bucket.name} &raquo; {item.parent.title}
+        {item.bucket.name} &raquo; <a href={item.parent.app_url} target="_blank">{item.parent.title}</a>
       </p>
       <p style={{ marginBottom: 0 }}>
-        <strong>{item.content}</strong>
+        <a href={item.app_url} target="_blank">
+          <strong>{item.content}</strong>
+        </a>
       </p>
       <div>
         {

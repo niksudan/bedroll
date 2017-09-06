@@ -2,6 +2,7 @@ import * as menubar from 'menubar';
 import * as BasecampOAuth2 from 'electron-oauth2-basecamp';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as electron from 'electron';
 
 require('dotenv').config();
 
@@ -16,13 +17,16 @@ const basecampOAuth2 = new BasecampOAuth2({
 const mb = menubar({
   preloadWindow: true,
   height: 600,
-  alwaysOnTop: true,
 });
 
 let accessToken;
 
 mb.on('after-create-window', async () => {
   mb.window.openDevTools();
+  mb.window.webContents.on('new-window', (e, url) => {
+    e.preventDefault();
+    electron.shell.openExternal(url);
+  });
   if (accessToken === undefined) {
     accessToken = await getAccessToken();
   }
