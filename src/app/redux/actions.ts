@@ -103,6 +103,7 @@ export const getTodos = (accountID, page = 1) => (
       return;
     }
     dispatch(receiveTodos(response.data, response.headers['x-total-count']));
+    console.log(response.data);
     return response;
   }
 );

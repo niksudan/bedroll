@@ -3,7 +3,6 @@ import * as moment from 'moment';
 
 const DueDate = ({ date }) => {
   const isDue = !moment(date).isAfter(moment(), 'day');
-
   const getDueDate = () => {
     const dueDays = moment(date).diff(moment().startOf('day'), 'day');
     switch (dueDays) {
@@ -20,11 +19,13 @@ const DueDate = ({ date }) => {
         return `in ${dueDays} days`;
     }
   }
-  
   return (
-    <span className={`tag is-${isDue ? 'danger' : 'warning'}`}>
-      Due {getDueDate()}
-    </span>
+    <small>
+      <span className="icon is-small">
+        <i className="fa fa-clock-o" />
+      </span>
+      &nbsp;Due {getDueDate()}
+    </small>
   );
 }
 
