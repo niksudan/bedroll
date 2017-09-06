@@ -1,5 +1,5 @@
 {
-  "name": "basecamp-mini",
+  "name": "bedroll",
   "version": "0.1.0",
   "main": "dist/main.js",
   "dependencies": {

@@ -5,7 +5,7 @@ import Item from './Item';
 const Archive = ({ account, items, total }) => (
   <section className="box" style={{ background: '#f5efe6' }}>
     <p className="heading" style={{ marginBottom: '1rem' }}>
-      Basecamp Mini ({account.name})
+      Bedroll ({account.name})
     </p>
     {items.map(item => (
       <Item key={item.id} item={item} />
