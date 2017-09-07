@@ -5,7 +5,7 @@ import * as find from 'lodash.find';
 import * as findIndex from 'lodash.findindex';
 import * as moment from 'moment';
 import store from './redux';
-import { authenticate, fetchTodos, updateTimestamp, requestTodos, receiveTodos } from './redux/actions';
+import { authenticate, fetchTodos, updateTimestamp, requestTodos, receiveTodos, setRefresh } from './redux/actions';
 import Wrapper from './components/Wrapper';
 import './scss/style.scss';
 
@@ -17,7 +17,7 @@ const REFRESH_TIME = 0.5;
 /**
  * Load new todos and update existing todos
  */
-const loadTodos = async () => {
+store.dispatch(setRefresh(async () => {
   store.dispatch(requestTodos());
   const state = store.getState() as any;
   const lastUpdated = state.app.lastUpdated;
@@ -46,7 +46,7 @@ const loadTodos = async () => {
       }
     });
   }
-  
+
   // Update the item state
   store.dispatch(receiveTodos(items));
   if (newItemCount > 0) {
@@ -56,16 +56,14 @@ const loadTodos = async () => {
     console.log(`Updated ${updatedItemCount} item(s)`);
   }
 
-  // Update reference and 
+  // Update reference
   store.dispatch(updateTimestamp());
-  setTimeout(() => {
-    loadTodos();
-  }, 1000 * 60 * REFRESH_TIME);
-};
+}));
 
 // Execute main logic
 store.dispatch(authenticate()).then(() => {
-  loadTodos();
+  const state = store.getState() as any;
+  state.app.refresh();
 });
 
 // Render application

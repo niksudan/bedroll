@@ -8,6 +8,7 @@ import {
   REQUEST_TODOS, RECEIVE_TODOS, RESET_TODOS,
   RECEIVE_TOTAL_TODOS,
   UPDATE_TIMESTAMP,
+  SET_REFRESH,
 } from './constants';
 
 /**
@@ -160,4 +161,13 @@ export const resetTodos = () => ({
 export const updateTimestamp = (date = new Date()) => ({
   type: UPDATE_TIMESTAMP,
   data: date,
+});
+
+/**
+ * Set the refresh callback
+ * @param {Func} refresh
+ */
+export const setRefresh = (refresh = () => {}) => ({
+  type: SET_REFRESH,
+  data: refresh,
 });

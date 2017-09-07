@@ -6,6 +6,7 @@ import {
   REQUEST_TODOS, RECEIVE_TODOS, RESET_TODOS,
   RECEIVE_TOTAL_TODOS,
   UPDATE_TIMESTAMP,
+  SET_REFRESH,
 } from './constants';
 
 const initialState = {
@@ -20,6 +21,7 @@ const initialState = {
   items: [],
   total: 0,
   lastUpdated: false,
+  refresh: () => {},
 };
 
 export default (state = initialState, action) => {
@@ -71,6 +73,10 @@ export default (state = initialState, action) => {
     case UPDATE_TIMESTAMP:
       return Object.assign({}, state, {
         lastUpdated: action.data,
+      });
+    case SET_REFRESH:
+      return Object.assign({}, state, {
+        refresh: action.data,
       });
     default:
       return state;
