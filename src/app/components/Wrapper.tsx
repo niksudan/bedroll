@@ -4,19 +4,20 @@ import Archive from './Archive';
 import Error from './Error';
 import Loading from './Loading';
 
-const Wrapper = ({ isLoading, didInvalidate, auth }) => {
-  if (isLoading || auth.identity === undefined) {
-    return <Loading />;
-  }
+const Wrapper = ({ didInvalidate, isFetchingToken, isAuthenticating, auth }) => {
   if (didInvalidate) {
     return <Error />;
+  }
+  if (isFetchingToken || isAuthenticating) {
+    return <Loading />;
   }
   return <Archive />;
 }
 
 const mapStateToProps = state => ({
-  isLoading: state.app.isLoading,
   didInvalidate: state.app.didInvalidate,
+  isFetchingToken: state.app.isFetchingToken,
+  isAuthenticating: state.app.isAuthenticating,
   auth: state.app.auth,
 });
 

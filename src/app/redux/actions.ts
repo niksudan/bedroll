@@ -5,7 +5,7 @@ import {
   REQUEST_ACCESS_TOKEN, RECEIVE_ACCESS_TOKEN,
   REQUEST_AUTH, RECEIVE_AUTH,
   SET_ACCOUNT,
-  REQUEST_TODOS, RECEIVE_TODOS, RESET_TODOS,
+  REQUEST_TODOS, RECEIVE_TODOS, RECEIVE_TOTAL_TODOS, RESET_TODOS,
 } from './constants';
 
 /**
@@ -84,15 +84,21 @@ const requestTodos = () => ({
   type: REQUEST_TODOS,
 });
 
-const receiveTodos = (data, total) => ({
+const receiveTodos = (data) => ({
   type: RECEIVE_TODOS,
   data,
-  total: parseInt(total),
+});
+
+const receiveTotalTodos = (data) => ({
+  type: RECEIVE_TOTAL_TODOS,
+  data: parseInt(data),
 });
 
 /**
  * Fetch todos from Basecamp
- * @param {Object} auth
+ * @param {Object} accountID
+ * @param {Number} page
+ * @return {Array}
  */
 export const getTodos = (accountID, page = 1) => (
   async (dispatch) => {
@@ -102,9 +108,9 @@ export const getTodos = (accountID, page = 1) => (
       dispatch(throwError('Could not connect to Basecamp'));
       return;
     }
-    dispatch(receiveTodos(response.data, response.headers['x-total-count']));
-    console.log(response.data);
-    return response;
+    dispatch(receiveTotalTodos(response.headers['x-total-count']));
+    dispatch(receiveTodos(response.data));
+    return response.data;
   }
 );
 

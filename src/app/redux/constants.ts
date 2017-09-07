@@ -6,4 +6,5 @@ export const RECEIVE_AUTH = 'RECEIVE_AUTH';
 export const SET_ACCOUNT = 'SET_ACCOUNT';
 export const REQUEST_TODOS = 'REQUEST_TODOS';
 export const RECEIVE_TODOS = 'RECEIVE_TODOS';
+export const RECEIVE_TOTAL_TODOS = 'RECEIVE_TOTAL_TODOS';
 export const RESET_TODOS = 'RESET_TODOS';
