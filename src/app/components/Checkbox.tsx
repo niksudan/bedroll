@@ -1,10 +1,13 @@
 import * as React from 'react';
 import * as moment from 'moment';
+import Icon from './Icon';
 
 const Checkbox = ({ completed }) => (
-  <span className="icon is-medium">
-    <i className={`fa fa-${completed ? 'check-square' : 'square-o'}`} style={{color: completed ? '#3cb371' : 'rgba(0,0,0,0.25)'}} />
-  </span>
+  <Icon
+    icon={completed ? 'check-square' : 'square-o'}
+    size="medium"
+    style={{color: completed ? '#3cb371' : 'rgba(0,0,0,0.25)'}}
+  />
 );
 
 export default Checkbox;

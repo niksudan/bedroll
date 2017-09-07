@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as moment from 'moment';
+import Icon from './Icon';
 
 const DueDate = ({ date }) => {
   const isDue = !moment(date).isAfter(moment(), 'day');
@@ -21,9 +22,7 @@ const DueDate = ({ date }) => {
   }
   return (
     <small>
-      <span className="icon is-small">
-        <i className="fa fa-clock-o" />
-      </span>
+    <Icon icon="clock-o" size="small" />
       &nbsp;Due {getDueDate()}
     </small>
   );

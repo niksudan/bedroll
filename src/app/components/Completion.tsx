@@ -1,11 +1,10 @@
 import * as React from 'react';
 import * as moment from 'moment';
+import Icon from './Icon';
 
 const Completion = ({ completion }) => (
   <small>
-    <span className="icon is-small">
-      <i className="fa fa-check-circle-o" />
-    </span>
+    <Icon icon="check-circle-o" size="small" />
     &nbsp;Completed {moment(completion.created_at).fromNow()} by {completion.creator.name}
   </small>
 );
