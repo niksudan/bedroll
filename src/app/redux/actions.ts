@@ -5,7 +5,9 @@ import {
   REQUEST_ACCESS_TOKEN, RECEIVE_ACCESS_TOKEN,
   REQUEST_AUTH, RECEIVE_AUTH,
   SET_ACCOUNT,
-  REQUEST_TODOS, RECEIVE_TODOS, RECEIVE_TOTAL_TODOS, RESET_TODOS,
+  REQUEST_TODOS, RECEIVE_TODOS, RESET_TODOS,
+  RECEIVE_TOTAL_TODOS,
+  UPDATE_TIMESTAMP,
 } from './constants';
 
 /**
@@ -17,15 +19,25 @@ export const throwError = (data) => ({
   data,
 });
 
+/**
+ * Send the access token request
+ */
 const requestAccessToken = () => ({
   type: REQUEST_ACCESS_TOKEN,
 });
 
-const receiveAccessToken = (data) => ({
+/**
+ * Receive the access token request
+ * @param {Object} accessToken
+ */
+const receiveAccessToken = (accessToken) => ({
   type: RECEIVE_ACCESS_TOKEN,
-  data,
+  data: accessToken,
 });
 
+/**
+ * Get the access token
+ */
 const getAccessToken = () => (
   async (dispatch) => {
     dispatch(requestAccessToken());
@@ -36,18 +48,29 @@ const getAccessToken = () => (
   }
 );
 
+/**
+ * Send the auth request
+ */
 const requestAuth = () => ({
   type: REQUEST_AUTH,
 });
 
-const receiveAuth = (data) => ({
+/**
+ * Receive the auth request
+ * @param {Object} auth
+ */
+const receiveAuth = (auth) => ({
   type: RECEIVE_AUTH,
-  data,
+  data: auth,
 });
 
-const setAccount = (data) => ({
+/**
+ * Set the authenticated account
+ * @param {Object} account
+ */
+const setAccount = (account) => ({
   type: SET_ACCOUNT,
-  data,
+  data: account,
 });
 
 /**
@@ -80,43 +103,61 @@ export const authenticate = () => (
   }
 );
 
-const requestTodos = () => ({
+/**
+ * Send the todo fetch request
+ */
+export const requestTodos = () => ({
   type: REQUEST_TODOS,
 });
 
-const receiveTodos = (data) => ({
+/**
+ * Receive the todo fetch request
+ * @param {Array} items
+ */
+export const receiveTodos = (items) => ({
   type: RECEIVE_TODOS,
-  data,
-});
-
-const receiveTotalTodos = (data) => ({
-  type: RECEIVE_TOTAL_TODOS,
-  data: parseInt(data),
+  data: items,
 });
 
 /**
- * Fetch todos from Basecamp
+ * Update the total number of todos
+ * @param {Number} total
+ */
+const receiveTotalTodos = (total) => ({
+  type: RECEIVE_TOTAL_TODOS,
+  data: parseInt(total),
+});
+
+/**
+ * Fetch new todos from Basecamp
  * @param {Object} accountID
  * @param {Number} page
- * @return {Array}
+ * @return {Array} todos
  */
-export const getTodos = (accountID, page = 1) => (
+export const fetchTodos = (accountID, page = 1) => (
   async (dispatch) => {
-    dispatch(requestTodos());
     const response = await axios.get(`https://3.basecampapi.com/${accountID}/projects/recordings.json?type=Todo&page=${page}`);
     if (response.status !== 200) {
       dispatch(throwError('Could not connect to Basecamp'));
       return;
     }
     dispatch(receiveTotalTodos(response.headers['x-total-count']));
-    dispatch(receiveTodos(response.data));
     return response.data;
   }
 );
 
 /**
- * Reset the Basecamp todos
+ * Reset the todos
  */
 export const resetTodos = () => ({
   type: RESET_TODOS,
+});
+
+/**
+ * Update the stored timestamp
+ * @param {Date} date
+ */
+export const updateTimestamp = (date = new Date()) => ({
+  type: UPDATE_TIMESTAMP,
+  data: date,
 });

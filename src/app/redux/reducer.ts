@@ -3,7 +3,9 @@ import {
   REQUEST_ACCESS_TOKEN, RECEIVE_ACCESS_TOKEN,
   REQUEST_AUTH, RECEIVE_AUTH,
   SET_ACCOUNT,
-  REQUEST_TODOS, RECEIVE_TODOS, RECEIVE_TOTAL_TODOS, RESET_TODOS,
+  REQUEST_TODOS, RECEIVE_TODOS, RESET_TODOS,
+  RECEIVE_TOTAL_TODOS,
+  UPDATE_TIMESTAMP,
 } from './constants';
 
 const initialState = {
@@ -17,6 +19,7 @@ const initialState = {
   account: {},
   items: [],
   total: 0,
+  lastUpdated: false,
 };
 
 export default (state = initialState, action) => {
@@ -57,13 +60,17 @@ export default (state = initialState, action) => {
         isFetchingTodos: false,
         items: action.data,
       });
+    case RESET_TODOS:
+      return Object.assign({}, state, {
+        items: [],
+      });
     case RECEIVE_TOTAL_TODOS:
       return Object.assign({}, state, {
         total: action.total,
       });
-    case RESET_TODOS:
+    case UPDATE_TIMESTAMP:
       return Object.assign({}, state, {
-        items: [],
+        lastUpdated: action.data,
       });
     default:
       return state;

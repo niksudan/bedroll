@@ -7,6 +7,7 @@
     "bulma": "^0.5.1",
     "font-awesome": "^4.7.0",
     "lodash.find": "^4.6.0",
+    "lodash.findindex": "^4.6.0",
     "menubar": "^5.2.3",
     "moment": "^2.18.1",
     "react": "^15.6.1",
