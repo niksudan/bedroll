@@ -21,6 +21,10 @@ module.exports = {
         loader: 'source-map-loader',
         enforce: 'pre',
       },
+      {
+        test: /\.scss$/,
+        loaders: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+      },
     ],
   },
   externals: {
