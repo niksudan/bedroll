@@ -9,7 +9,7 @@ const Archive = ({ isFetchingTodos, account, items, total, refresh }) => (
       <Icon icon="refresh" size="small" className={isFetchingTodos ? 'spin' : ''} />
     </span>
     <p className="heading" style={{ marginBottom: '1rem' }}>
-      Bedroll ({account.name})
+      🏕️ Bedroll ({account.name})
     </p>
     {items.map(item => (
       <Item key={item.id} item={item} />
