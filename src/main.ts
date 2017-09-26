@@ -3,6 +3,7 @@ import * as BasecampOAuth2 from 'electron-oauth2-basecamp';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as electron from 'electron';
+import * as moment from 'moment';
 
 require('dotenv').config();
 
@@ -37,10 +38,35 @@ mb.on('after-create-window', async () => {
  * Get Basecamp access token
  */
 const getAccessToken = async () => {
+  let token;
+
+  // Load token from storage
   if (fs.existsSync(TOKEN_PATH)) {
-    return JSON.parse(fs.readFileSync(TOKEN_PATH, 'utf8'));
+    console.log('Token detected');
+    token = JSON.parse(fs.readFileSync(TOKEN_PATH, 'utf8'));
+
+    // Refresh if expired
+    if (token.expiry_time && token.expiry_time <= moment().unix()) {
+      console.log('Token has expired - refreshing token');
+      token = await basecampOAuth2.refreshToken(token.refresh_token);
+      storeAccessToken(token);
+    }
+  
+  // Request a new token if no token detected
+  } else {
+    console.log('No token detected - requesting a new one');
+    token = await basecampOAuth2.requestToken();
+    storeAccessToken(token);
   }
-  const token = await basecampOAuth2.requestToken();
-  fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
+
   return token;
 }
+
+/**
+ * Store Basecamp access token to storage
+ * @param {Object} token
+ */
+const storeAccessToken = (token) => {
+  token.expiry_time = token.expires_in + moment().unix();
+  fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
+};
