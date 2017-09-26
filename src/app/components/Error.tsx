@@ -6,7 +6,7 @@ const Error = ({ error }) => (
     <div className="hero-body">
       <div className="container has-text-centered">
         <h1 className="title">Oh No!</h1>
-        <h3 className="subtitle">{error}</h3>
+        <p>{error}</p>
       </div>
     </div>
   </section>
