@@ -40,6 +40,7 @@
   },
   "scripts": {
     "dev": "tsc && webpack && electron . --enable-logging",
-    "build": "tsc && webpack && electron-packager . Bedroll"
+    "build": "tsc && webpack && electron-packager . Bedroll --no-prune --overwrite",
+    "rebuild": "electron-packager . Bedroll --no-prune --overwrite"
   }
 }
