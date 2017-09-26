@@ -82,12 +82,14 @@ export const authenticate = () => (
   async (dispatch) => {
     await dispatch(getAccessToken());
     dispatch(requestAuth());
-    const response = await axios.get('https://launchpad.37signals.com/authorization.json');
-    if (response.status !== 200) {
+    let response;
+    try {
+      response = await axios.get('https://launchpad.37signals.com/authorization.json');
+      dispatch(receiveAuth(response.data));
+    } catch (e) {
       dispatch(throwError('Could not connect to authentication service'));
       return;
     }
-    dispatch(receiveAuth(response.data));
 
     // Once we have the authentication details, we must find a valid BC3 account to get data from
     if (response.data.accounts.length < 0) {
@@ -137,13 +139,14 @@ const receiveTotalTodos = (total) => ({
  */
 export const fetchTodos = (accountID, page = 1) => (
   async (dispatch) => {
-    const response = await axios.get(`https://3.basecampapi.com/${accountID}/projects/recordings.json?type=Todo&page=${page}`);
-    if (response.status !== 200) {
+    try {
+      const response = await axios.get(`https://3.basecampapi.com/${accountID}/projects/recordings.json?type=Todo&page=${page}`);
+      dispatch(receiveTotalTodos(response.headers['x-total-count']));
+      return response.data;
+    } catch (e) {
       dispatch(throwError('Could not connect to Basecamp'));
       return;
     }
-    dispatch(receiveTotalTodos(response.headers['x-total-count']));
-    return response.data;
   }
 );
 
