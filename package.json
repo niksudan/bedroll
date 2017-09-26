@@ -40,6 +40,6 @@
   },
   "scripts": {
     "dev": "tsc && webpack && electron . --enable-logging",
-    "build": "tsc && webpack && electron-packager . BasecampMini"
+    "build": "tsc && webpack && electron-packager . Bedroll"
   }
 }
