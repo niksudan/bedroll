@@ -1,5 +1,5 @@
 {
   "watch": ["src"],
-  "ext": "ts",
+  "ext": "ts,tsx",
   "exec": "tsc && webpack && electron . --enable-logging"
 }
