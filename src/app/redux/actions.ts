@@ -2,10 +2,14 @@ import axios from 'axios';
 import * as find from 'lodash.find';
 import {
   THROW_ERROR,
-  REQUEST_ACCESS_TOKEN, RECEIVE_ACCESS_TOKEN,
-  REQUEST_AUTH, RECEIVE_AUTH,
+  REQUEST_ACCESS_TOKEN,
+  RECEIVE_ACCESS_TOKEN,
+  REQUEST_AUTH,
+  RECEIVE_AUTH,
   SET_ACCOUNT,
-  REQUEST_TODOS, RECEIVE_TODOS, RESET_TODOS,
+  REQUEST_TODOS,
+  RECEIVE_TODOS,
+  RESET_TODOS,
   RECEIVE_TOTAL_TODOS,
   UPDATE_TIMESTAMP,
   SET_REFRESH,
@@ -39,15 +43,15 @@ const receiveAccessToken = (accessToken) => ({
 /**
  * Get the access token
  */
-const getAccessToken = () => (
-  async (dispatch) => {
-    dispatch(requestAccessToken());
-    const response = await axios.get(`token.json`);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access_token}`;
-    dispatch(receiveAccessToken(response.data));
-    return response;
-  }
-);
+const getAccessToken = () => async (dispatch) => {
+  dispatch(requestAccessToken());
+  const response = await axios.get(`token.json`);
+  axios.defaults.headers.common['Authorization'] = `Bearer ${
+    response.data.access_token
+  }`;
+  dispatch(receiveAccessToken(response.data));
+  return response;
+};
 
 /**
  * Send the auth request
@@ -78,33 +82,33 @@ const setAccount = (account) => ({
  * Fetch authentication details
  * @return {int} accountID
  */
-export const authenticate = () => (
-  async (dispatch) => {
-    await dispatch(getAccessToken());
-    dispatch(requestAuth());
-    let response;
-    try {
-      response = await axios.get('https://launchpad.37signals.com/authorization.json');
-      dispatch(receiveAuth(response.data));
-    } catch (e) {
-      dispatch(throwError('Could not connect to authentication service'));
-      return;
-    }
-
-    // Once we have the authentication details, we must find a valid BC3 account to get data from
-    if (response.data.accounts.length < 0) {
-      dispatch(throwError('You\'re not a member of any account'));
-      return;
-    }
-    const account = find(response.data.accounts, { product: 'bc3' });
-    if (account === undefined) {
-      dispatch(throwError('You need to be a member of a Basecamp 3 account'));
-      return;
-    }
-    dispatch(setAccount(account));
-    return account.id;
+export const authenticate = () => async (dispatch) => {
+  await dispatch(getAccessToken());
+  dispatch(requestAuth());
+  let response;
+  try {
+    response = await axios.get(
+      'https://launchpad.37signals.com/authorization.json',
+    );
+    dispatch(receiveAuth(response.data));
+  } catch (e) {
+    dispatch(throwError('Could not connect to authentication service'));
+    return;
   }
-);
+
+  // Once we have the authentication details, we must find a valid BC3 account to get data from
+  if (response.data.accounts.length < 0) {
+    dispatch(throwError("You're not a member of any account"));
+    return;
+  }
+  const account = find(response.data.accounts, { product: 'bc3' });
+  if (account === undefined) {
+    dispatch(throwError('You need to be a member of a Basecamp 3 account'));
+    return;
+  }
+  dispatch(setAccount(account));
+  return account.id;
+};
 
 /**
  * Send the todo fetch request
@@ -137,18 +141,18 @@ const receiveTotalTodos = (total) => ({
  * @param {Number} page
  * @return {Array} todos
  */
-export const fetchTodos = (accountID, page = 1) => (
-  async (dispatch) => {
-    try {
-      const response = await axios.get(`https://3.basecampapi.com/${accountID}/projects/recordings.json?type=Todo&page=${page}`);
-      dispatch(receiveTotalTodos(response.headers['x-total-count']));
-      return response.data;
-    } catch (e) {
-      dispatch(throwError('Could not connect to Basecamp'));
-      return;
-    }
+export const fetchTodos = (accountID, page = 1) => async (dispatch) => {
+  try {
+    const response = await axios.get(
+      `https://3.basecampapi.com/${accountID}/projects/recordings.json?type=Todo&page=${page}`,
+    );
+    dispatch(receiveTotalTodos(response.headers['x-total-count']));
+    return response.data;
+  } catch (e) {
+    dispatch(throwError('Could not connect to Basecamp'));
+    return;
   }
-);
+};
 
 /**
  * Reset the todos

@@ -5,7 +5,10 @@ import Icon from './Icon';
 const Completion = ({ completion }) => (
   <small>
     <Icon icon="check-circle-o" size="small" />
-    &nbsp;Completed {moment(completion.created_at).fromNow()} by {completion.creator.name}
+    <span>
+      Completed {moment(completion.created_at).fromNow()} by{' '}
+      {completion.creator.name}
+    </span>
   </small>
 );
 

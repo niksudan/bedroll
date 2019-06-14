@@ -15,17 +15,17 @@ const DueDate = ({ date }) => {
         return 'yesterday';
       default:
         if (dueDays < 0) {
-          return `${Math.abs(dueDays)} ago`;
+          return `${Math.abs(dueDays)} days ago`;
         }
         return `in ${dueDays} days`;
     }
-  }
+  };
   return (
     <small>
-    <Icon icon="clock-o" size="small" />
-      &nbsp;Due {getDueDate()}
+      <Icon icon="clock-o" size="small" />
+      <span>Due {getDueDate()}</span>
     </small>
   );
-}
+};
 
 export default DueDate;

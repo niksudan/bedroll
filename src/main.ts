@@ -12,7 +12,7 @@ const TOKEN_PATH = 'token.json';
 const basecampOAuth2 = new BasecampOAuth2({
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  redirectUri: 'https://www.digital-results.com',
+  redirectUri: 'https://www.forge.uk',
 });
 
 const mb = menubar({
@@ -34,6 +34,13 @@ mb.on('after-create-window', async () => {
   mb.window.loadURL(`file://${path.join(__dirname, '..')}/app.html`);
 });
 
+mb.on('ready', () => {
+  mb.tray.setImage(path.join(__dirname, 'icons/icon-dark.png'));
+  if (electron.systemPreferences.isDarkMode()) {
+    mb.tray.setImage(path.join(__dirname, 'icons/icon-light.png'));
+  }
+});
+
 /**
  * Get Basecamp access token
  */
@@ -51,8 +58,8 @@ const getAccessToken = async () => {
       token = await basecampOAuth2.refreshToken(token.refresh_token);
       storeAccessToken(token);
     }
-  
-  // Request a new token if no token detected
+
+    // Request a new token if no token detected
   } else {
     console.log('No token detected - requesting a new one');
     token = await basecampOAuth2.requestToken();
@@ -60,7 +67,7 @@ const getAccessToken = async () => {
   }
 
   return token;
-}
+};
 
 /**
  * Store Basecamp access token to storage
