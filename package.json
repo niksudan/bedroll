@@ -28,7 +28,7 @@
     "electron-packager": "^9.0.0",
     "electron-prebuilt": "^1.4.13",
     "ncp": "^2.0.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "nodemon": "^1.19.1",
     "postcss-loader": "^2.0.6",
     "sass-loader": "^6.0.6",
