@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "dist/main.js",
   "dependencies": {
-    "axios": ">=0.21.1",
+    "axios": ">=0.21.2",
     "bulma": "^0.5.1",
     "font-awesome": "^4.7.0",
     "lodash.find": "^4.6.0",
