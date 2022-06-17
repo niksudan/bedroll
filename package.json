@@ -23,7 +23,7 @@
     "awesome-typescript-loader": "^5.2.1",
     "css-loader": "^0.28.7",
     "dotenv": "^4.0.0",
-    "electron": "^11.5.0",
+    "electron": "^15.5.5",
     "electron-oauth2-basecamp": "^0.1.1",
     "electron-packager": "^9.0.0",
     "electron-prebuilt": "^1.4.13",
